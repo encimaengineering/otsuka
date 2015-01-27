@@ -1,6 +1,6 @@
 //JavaScript Document
 /*
-Code Name: OmniFormTracker 
+Code Name: OmniFormTracker 1.2.1
 Code URI: https://github.dowjones.net/martzz/OmniFormTracker
 Description: JavaScript Tracks all form processes on a page and creates a path. Once page leaves on (Refresh, Navigate, Form Submit) send list to omniture.
 Author: Zachary A. Martz
