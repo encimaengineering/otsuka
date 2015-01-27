@@ -1,0 +1,528 @@
+Configuration Variables
+
+None
+
+Parameters
+
+p = string of pipe delimited [name~]filter pairs
+t = (optional) link type applied to the list of pairs
+o = (optional) returns the entire object that was clicked
+Returns
+
+url if o parameter is not present otherwise return object of link clicked
+Sample Calls
+
+?
+//Plugin Example: using custom names and filters returns link only
+var url=s.linkHandler('name1~filer1|name2~filter2|filter3','d');
+if(url){
+    s.prop1=url;
+    s.linkTrackVars="prop1";
+}
+ 
+//Plugin Example: using custom values returns link object
+var linkObject=s.linkHandler('omniture.com','o','true');
+if(linkObject){
+    s.prop1=linkObject.href;
+    s.prop2="omniture";
+        s.prop3=linkObject.innerHTML;
+    s.events="event2";
+    s.linkTrackVars="prop1,prop2,prop3,events";
+    s.linkTrackEvents="event2";
+}
+
+
+/*
+ * Plugin: linkHandler 0.7 - identify and report custom links
+ */
+/*********************************************************************
+* Function linkHandler(p,t): Sets linkName and linkType based
+*                 on the first parameter and the URL of link clicked.
+*                 When a link is clicked, bc() is called, which puts
+*                 the link object into eo. If p is omitted, '' is
+*                 always returned. If t is omitted, linkType is 'o'.
+*
+*     p = string of pipe delimited [name~]filter pairs
+*     t = (optional) link type applied to the list of pairs
+*     o = (optional) returns the entire object that was clicked
+* Returns:
+*     URL of the link found or ''
+*********************************************************************/
+s.linkHandler=new Function("p","t","o",""
+    +"var s=this,"
+      // href of link clicked
+        +"h=s.p_gh(),"
+            +"i,"
+            +"l;"
+ 
+    +"t=t?t:'o';"
+ 
+    // dont override existing onClick event
+    // and dont continue if eo and lnk are empty
+    +"if(!h||(s.linkType&&(h||s.linkName)))"
+        +"return '';"
+ 
+    +"i=h.href.indexOf('?');"
+ 
+    // URL and match filter may contain the query string
+    +"h.href=s.linkLeaveQueryString||i<0?h.href:h.href.substring(0,i);"
+    +"l=s.pt(p,'|','p_gn',h.href.toLowerCase());"
+ 
+    // if l has a value, set linkType and return the HREF
+    +"if(l){"
+        +"s.linkName=l=='[['?'':l;"
+        +"s.linkType=t;"
+        +"return o?h:h.href;"
+    +"}"
+);
+    +"return '';"
+ 
+/*********************************************************************
+* Function p_gn(t,h): Plugin Utility Get Name - pt() callback used to
+*                     parse match list
+*     t = match pair
+*     h = match value (URL)
+* Returns:
+*     Matched link name, URL or 0
+*********************************************************************/
+s.p_gn=new Function("t","h",""
+    +"var i=t?t.indexOf('~'):-1,"
+      +"n,"
+      +"x;"
+    +"if(t&&h){"
+        +"n=i<0?'':t.substring(0,i);"
+        +"x=t.substring(i+1);"
+        +"if(h.indexOf(x.toLowerCase())>-1)"
+            +"return n?n:'[[';"
+    +"}"
+    +"return 0;"
+);
+/*********************************************************************
+* Function p_gh(): Plugin Utiltiy Get HREF - returns the HREF of a
+*                     link clicked or ''. Used by linkHandler,
+*                     getExitLink and getDownloadLink.
+*     t = match pair
+*     m = match value (URL)
+* Returns:
+*     Matched link name, URL or 0
+*********************************************************************/
+s.p_gh=new Function(""
+    +"var s=this;"
+ 
+    // required to find the href of a link - set by bc or lc
+    +"if(!s.eo&&!s.lnk)"
+        +"return '';"
+ 
+    +"var o=s.eo?s.eo:s.lnk,"
+            +"y=s.ot(o),"
+            +"n=s.oid(o),"
+            +"x=o.s_oidt;"
+ 
+    // Move from child object to parent object until a 'clickable'
+    //  object is found. A clicable object is one that the ClickMap
+    //  function oid() finds an object ID for
+    +"if(s.eo&&o==s.eo){"
+        +"while(o&&!n&&y!='BODY'){"
+            +"o=o.parentElement?o.parentElement:o.parentNode;"
+            +"if(!o)"
+                +"return '';"
+            +"y=s.ot(o);"
+            +"n=s.oid(o);"
+            +"x=o.s_oidt;"
+        +"}"
+    +"}"
+    +"return o?o:'';"
+);
+
+
+/*
+ * Plugin: linkHandler 0.7 - identify and report custom links
+ */
+s.linkHandler=new Function("p","t","o",""
++"var s=this,h=s.p_gh(),i,l;t=t?t:'o';if(!h||(s.linkType&&(h||s.linkN"
++"ame)))return'';i=h.href.indexOf('?');h.href=s.linkLeaveQueryString|"
++"|i<0?h.href:h.href.substring(0,i);l=s.pt(p,'|','p_gn',h.href.toLowe"
++"rCase());if(l){s.linkName=l=='[['?'':l;s.linkType=t;return o?h:h.hr"
++"ef;}return'';");
+s.p_gh=new Function("",""
++"var s=this;if(!s.eo&&!s.lnk)return'';var o=s.eo?s.eo:s.lnk,y=s.ot(o"
++"),n=s.oid(o),x=o.s_oidt;if(s.eo&&o==s.eo){while(o&&!n&&y!='BODY'){o"
++"=o.parentElement?o.parentElement:o.parentNode;if(!o)return'';y=s.ot"
++"(o);n=s.oid(o);x=o.s_oidt;}}return o?o:'';");
+s.p_gn=new Function("t","h",""
++"var i=t?t.indexOf('~'):-1,n,x;if(t&&h){n=i<0?'':t.substring(0,i);x="
++"t.substring(i+1);if(h.indexOf(x.toLowerCase())>-1)return n?n:'[[';}"
++"return 0;");
+
+
+
+Configuration Variables
+
+None
+
+Parameters
+
+p = (optional) string of comma delimited extensions
+o = (optional) true if they want to return the object instead of href
+Returns
+
+url if o parameter is not present otherwise return object of link clicked
+Sample Calls
+
+?
+// Plugin Example: using linkDownloadFileTypes, returns link object
+var linkObject=s.downloadLinkHandler('','true');
+if(linkObject){
+    s.prop1=linkObject.href;
+        s.prop2=linkObject.innerHTML;
+    s.events="event1";
+    s.linkTrackVars="prop1,prop2,events";
+    s.linkTrackEvents="event1";
+}
+ 
+//Plugin Example: using linkDownloadFileTypes, returns link only
+var link=s.downloadLinkHandler();
+if(link){
+    s.prop1=link;
+    s.events="event1";
+    s.linkTrackVars="prop1,events";
+    s.linkTrackEvents="event1";
+}
+ 
+//Plugin Example: using custom file types, returns link only
+var link=s.downloadLinkHandler('pdf,ppt,doc');
+if(link){
+    s.prop1=link;
+    s.events="event1";
+    s.linkTrackVars="prop1,events";
+    s.linkTrackEvents="event1";
+}
+                
+/*
+ * Plugin: downloadLinkHandler 0.8 - identify and report download links
+ */
+/*********************************************************************
+* Function downloadLinkHandler(p): Sets linkType based on the first
+*                 parameter and the URL of link clicked. Only the file
+*                 extension is compared. If 'p' is omitted,
+*                 linkDownloadFileTypes is used. If trackDownloadLinks
+*                 is false, '' is always returned.
+*
+*     p = (optional) string of comma delimited extensions
+*     o = (optional) true if they want to return the object instead of href
+* Returns:
+*     URL of the link or object found or ''
+*********************************************************************/
+s.downloadLinkHandler = function (p, e) {
+    var s = this,
+        o = s.p_gh(),
+        h = o.href,
+        n = 'linkDownloadFileTypes',
+        i,
+        t;
+    if (!h || (s.linkType && (h || s.linkName))) return '';
+    i = h.indexOf('?');
+    t = s[n];
+    s[n] = p ? p : t;
+    if (s.lt(h) == 'd') s.linkType = 'd';
+    else h = '';
+    s[n] = t;
+    return e ? o : h;
+}
+/*********************************************************************
+* Function p_gh(): Plugin Utiltiy Get HREF - returns the HREF of a
+*                     link clicked or ''. Used by linkHandler,
+*                     exitLinkHandler and downloadLinkHandler.
+*     t = match pair
+*     m = match value (URL)
+* Returns:
+*     Matched link name, URL or 0
+*********************************************************************/
+s.p_gh = function () {
+    var s = this;
+    if (!s.eo && !s.lnk) return '';
+    var o = s.eo ? s.eo : s.lnk,
+        y = s.ot(o),
+        n = s.oid(o),
+        x = o.s_oidt;
+    if (s.eo && o == s.eo) {
+        while (o && !n && y != 'BODY') {
+            o = o.parentElement ? o.parentElement : o.parentNode;
+            if (!o) return '';
+            y = s.ot(o);
+            n = s.oid(o);
+            x = o.s_oidt;
+        }
+    }
+    return o ? o : '';
+}
+
+
+
+/*
+ * Plugin: downloadLinkHandler 0.8 - identify and report download links
+ */
+s.downloadLinkHandler=new Function("p","e",""
++"var s=this,o=s.p_gh(),h=o.href,n='linkDownloadFileTypes',i,t;if(!h|"
++"|(s.linkType&&(h||s.linkName)))return'';i=h.indexOf('?');t=s[n];s[n"
++"]=p?p:t;if(s.lt(h)=='d')s.linkType='d';else h='';s[n]=t;return e?o:"
++"h;");
+s.p_gh=new Function("",""
++"var s=this;if(!s.eo&&!s.lnk)return'';var o=s.eo?s.eo:s.lnk,y=s.ot(o"
++"),n=s.oid(o),x=o.s_oidt;if(s.eo&&o==s.eo){while(o&&!n&&y!='BODY'){o"
++"=o.parentElement?o.parentElement:o.parentNode;if(!o)return'';y=s.ot"
++"(o);n=s.oid(o);x=o.s_oidt;}}return o?o:'';");
+
+Configuration Variables
+
+LIST ANY CONFIGURATION VARIABLES HERE. IF NONE, WRITE 'None'
+
+Parameters
+
+LIST ANY PLUGIN FUNCTION PARAMETERS HERE. EXAMPLE:
+
+a = (string, required) this is the first parameter
+d = (integer, optional) this is the second parameter
+IF NONE, WRITE 'None'
+
+Returns
+
+LIST ANY RETURN VALUES HERE. EXAMPLE:
+
+(string) The updated string
+(boolean) 'True' if the thing exists
+(string) A delimited list of values if multiple values found
+IF NONE, WRITE 'None'
+
+Sample Calls
+
+GIVE CODE SAMPLES HERE. EXAMPLE:
+
+?
+//single parameter
+*   s.campaign=s.getQueryParam('cid');
+*
+*   //multiple parameters
+*   s.campaign=s.getQueryParam('cid,sid',':');
+*
+*   //non-page URL example
+*   s.campaign=s.getQueryParam('cid','',document.referrer);
+*
+*   //parent frame example
+*   s.campaign=s.getQueryParam('cid','','f');
+*  
+*   //look in the hash
+*   s.campaign=s.getQueryParam('cid','','',1);
+
+
+/*
+ * Plugin: downloadLinkHandler 0.5 - identify and report download links
+ */
+/*********************************************************************
+* Function downloadLinkHandler(p): Sets linkType based on the first
+*                 parameter and the URL of link clicked. Only the file
+*                 extension is compared. If 'p' is omitted,
+*                 linkDownloadFileTypes is used. If trackDownloadLinks
+*                 is false, '' is always returned.
+*
+*     p = (optional) string of comma delimited extensions
+* Returns:
+*     URL of the link found or ''
+*********************************************************************/
+s.downloadLinkHandler=new Function("p",""
+    +"var s=this,"
+      // href of link clicked
+        +"h=s.p_gh(),"
+            +"n='linkDownloadFileTypes',"
+            +"i,"
+            +"t;"
+ 
+    // dont override existing onClick event
+    +"if(!h||(s.linkType&&(h||s.linkName)))"
+        +"return '';"
+ 
+    +"i=h.indexOf('?');"
+ 
+    // store linkDownloadFileTypes in t, replace it with p if it exists
+    +"t=s[n];"
+    +"s[n]=p?p:t;"
+ 
+    +"if(s.lt(h)=='d')"
+        +"s.linkType='d';"
+    +"else "
+        +"h='';"
+ 
+    // restore linkDownloadFileTypes
+    +"s[n]=t;"
+    +"return h;"
+);
+/*********************************************************************
+* Function p_gh(): Plugin Utiltiy Get HREF - returns the HREF of a
+*                     link clicked or ''. Used by linkHandler,
+*                     exitLinkHandler and downloadLinkHandler.
+*     t = match pair
+*     m = match value (URL)
+* Returns:
+*     Matched link name, URL or 0
+*********************************************************************/
+s.p_gh=new Function(""
+    +"var s=this;"
+ 
+    // required to find the href of a link - set by bc or lc
+    +"if(!s.eo&&!s.lnk)"
+        +"return '';"
+ 
+    +"var o=s.eo?s.eo:s.lnk,"
+            +"y=s.ot(o),"
+            +"n=s.oid(o),"
+            +"x=o.s_oidt;"
+ 
+    // I have no idea what this does
+    //  but it is required for Opera and all browsers on Mac
+    //  I do know that this resets the o object
+    +"if(s.eo&&o==s.eo){"
+        +"while(o&&!n&&y!='BODY'){"
+            +"o=o.parentElement?o.parentElement:o.parentNode;"
+            +"if(!o)"
+                +"return '';"
+            +"y=s.ot(o);"
+            +"n=s.oid(o);"
+            +"x=o.s_oidt"
+        +"}"
+    +"}"
+    +"return o.href?o.href:'';"
+);
+
+
+
+/*
+ * Plugin: downloadLinkHandler 0.5 - identify and report download links
+ */
+s.downloadLinkHandler=new Function("p",""
++"var s=this,h=s.p_gh(),n='linkDownloadFileTypes',i,t;if(!h||(s.linkT"
++"ype&&(h||s.linkName)))return '';i=h.indexOf('?');t=s[n];s[n]=p?p:t;"
++"if(s.lt(h)=='d')s.linkType='d';else h='';s[n]=t;return h;");
+/*
+ * Utility Function: p_gh
+ */
+s.p_gh=new Function(""
++"var s=this;if(!s.eo&&!s.lnk)return '';var o=s.eo?s.eo:s.lnk,y=s.ot("
++"o),n=s.oid(o),x=o.s_oidt;if(s.eo&&o==s.eo){while(o&&!n&&y!='BODY'){"
++"o=o.parentElement?o.parentElement:o.parentNode;if(!o)return '';y=s."
++"ot(o);n=s.oid(o);x=o.s_oidt}}return o.href?o.href:'';");
+
+
+
+Configuration Variables
+
+None
+
+Parameters
+
+p = (optional) string of comma delimited filters
+o = (optional) true if they want to return the object instead of href
+Returns
+
+url if o parameter is not present otherwise return object of link clicked
+Sample Calls
+
+?
+// Plugin Example: using linkInternalFilters, returns link object
+var linkObject=s.exitLinkHandler('','true');
+if(linkObject){
+    s.prop1=linkObject.href;
+    s.events="event1";
+    s.linkTrackVars="prop1,events";
+    s.linkTrackEvents="event1";
+}
+ 
+//Plugin Example: using linkInternalFilters, returns link only
+var link=s.exitLinkHandler()
+if(link){
+    s.prop1=link;
+    s.events="event1";
+    s.linkTrackVars="prop1,events";
+    s.linkTrackEvents="event1";
+}
+ 
+// Plugin Example: using custom filters, returns link only
+var url=s.exitLinkHandler('javascript:,mysite.com,siteA.com');
+                
+
+
+
+/*
+ * Plugin: exitLinkHandler 0.8 - identify and report exit links
+ */
+/*********************************************************************
+* Function exitLinkHandler(p): Sets linkType based on the first parameter.
+*                 If any the filters are found, linkType is set and a
+*                 URL returned. If p is omitted, linkInternalFilters
+*                 is used. If trackExternalLinks is false, '' is
+*                 always returned.
+*
+*     p = (optional) string of comma delimited filters
+*     o = (optional) true if they want to return the object instead of href
+* Returns:
+*     URL of the link or object found or ''
+*********************************************************************/
+s.exitLinkHandler = function (p, e) {
+    var s = this,
+        o = s.p_gh(),
+        h = o.href,
+        n = 'linkInternalFilters',
+        i,
+        t;
+    if (!h || (s.linkType && (h || s.linkName))) return '';
+    i = h.indexOf('?');
+    t = s[n];
+    s[n] = p ? p : t;
+    h = s.linkLeaveQueryString || i < 0 ? h : h.substring(0, i);
+    if (s.lt(h) == 'e') s.linkType = 'e';
+    else h = '';
+    s[n] = t;
+    return e ? o : h;
+}
+/*********************************************************************
+* Function p_gh(): Plugin Utiltiy Get HREF - returns the HREF of a
+*                     link clicked or ''. Used by linkHandler,
+*                     exitLinkHandler and downloadLinkHandler.
+*     t = match pair
+*     m = match value (URL)
+* Returns:
+*     Matched link name, URL or 0
+*********************************************************************/
+s.p_gh = function () {
+    var s = this;
+    if (!s.eo && !s.lnk) return '';
+    var o = s.eo ? s.eo : s.lnk,
+        y = s.ot(o),
+        n = s.oid(o),
+        x = o.s_oidt;
+    if (s.eo && o == s.eo) {
+        while (o && !n && y != 'BODY') {
+            o = o.parentElement ? o.parentElement : o.parentNode;
+            if (!o) return '';
+            y = s.ot(o);
+            n = s.oid(o);
+            x = o.s_oidt;
+        }
+    }
+    return o ? o : '';
+}
+
+
+
+/*
+ * Plugin: exitLinkHandler 0.8 - identify and report exit links
+ */
+s.exitLinkHandler=new Function("p","e",""
++"var s=this,o=s.p_gh(),h=o.href,n='linkInternalFilters',i,t;if(!h||("
++"s.linkType&&(h||s.linkName)))return'';i=h.indexOf('?');t=s[n];s[n]="
++"p?p:t;h=s.linkLeaveQueryString||i<0?h:h.substring(0,i);if(s.lt(h)=="
++"'e')s.linkType='e';else h='';s[n]=t;return e?o:h;");
+s.p_gh=new Function("",""
++"var s=this;if(!s.eo&&!s.lnk)return'';var o=s.eo?s.eo:s.lnk,y=s.ot(o"
++"),n=s.oid(o),x=o.s_oidt;if(s.eo&&o==s.eo){while(o&&!n&&y!='BODY'){o"
++"=o.parentElement?o.parentElement:o.parentNode;if(!o)return'';y=s.ot"
++"(o);n=s.oid(o);x=o.s_oidt;}}return o?o:'';");
