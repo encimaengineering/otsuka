@@ -1,4 +1,4 @@
-// App Measurement 1.4 basic code reqs
+// App Measurement 1.4 basic code reqs 
 // this file must contain a defined s_account for app meas code to run as well.
 // Must contain s = new AppMeasurement();
 // Include s.account=s_account in the Additional Configuration box within the SiteCatalyst Pageload Tag Attributes
