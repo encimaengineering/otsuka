@@ -8,6 +8,7 @@ Last updated 12/12/2014 by Carl Wall
 
 // bt_domainQA is comma-sparated, and QA domain may be a subdomain of the prod domain.
 // So, check if the current domain matches the prod domain and then make sure it doesn't also match a QA domain.
+// //TEst
 
 var qaDomains = bt_domainQA.split(',');
 var scReport=location.hostname+'/hcp';
