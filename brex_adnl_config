@@ -1,0 +1,254 @@
+ var scLinkCustVars ="prop1,prop2,prop3,prop4,prop5,prop6,prop7,prop8,prop9,prop10,prop11,prop12,prop13,prop14,prop15,prop25,prop31,prop39,prop41,prop43,prop50,prop52,eVar1,eVar2,eVar24,eVar31,eVar32,eVar35,eVar36,eVar37,eVar38,eVar39,eVar43,eVar46,eVar47,eVar51,eVar52,events"
+ var oldLocation = location.href;
+ setInterval(function() {
+      if(location.href != oldLocation) {
+        var PName = "some value"
+            manualCall(PName);
+            oldLocation = location.href
+            
+      }
+  }, 2000); // check every second
+
+                function manualCall(PName){
+                	s.events="";
+                	s.prop30="";
+                	s.eVar30="D=c30";
+                	s.prop30="";
+                	s.eVar34="D=c34";
+                    s.t();
+                }
+
+
+// var checkExist = setInterval(function() {
+//    if ($('div.alignleft.mobile-only.saving').length) {
+//       var TYName = "some value"
+//       manualCall(TYName);
+//       localStorage['test']='checked';
+//       clearInterval(checkExist);
+//    }
+// }, 100); // check every 100ms
+
+        // function manualCall(TYName){
+          
+        //    localStorage['test']='checked';
+        //     s.t();
+            
+        // }
+
+(function ($) {
+ 
+/**
+* @function
+* @property {object} jQuery plugin which runs handler function once specified element is inserted into the DOM
+* @param {function} handler A function to execute at the time when the element is inserted
+* @param {bool} shouldRunHandlerOnce Optional: if true, handler is unbound after its first invocation
+* @example $(selector).waitUntilExists(function);
+*/
+ 
+$.fn.waitUntilExists    = function (handler, shouldRunHandlerOnce, isChild) {
+    var found   = 'found';
+    var $this   = $(this.selector);
+    var $elements   = $this.not(function () { return $(this).data(found); }).each(handler).data(found, true);
+    
+    if (!isChild)
+    {
+        (window.waitUntilExists_Intervals = window.waitUntilExists_Intervals || {})[this.selector] =
+            window.setInterval(function () { $this.waitUntilExists(handler, shouldRunHandlerOnce, true); }, 500)
+        ;
+    }
+    else if (shouldRunHandlerOnce && $elements.length)
+    {
+        window.clearInterval(window.waitUntilExists_Intervals[this.selector]);
+    }
+    
+    return $this;
+}
+}(jQuery));
+
+
+
+
+//Reg Thank You Page
+function scModal(){
+        s.regPageName =  sc_site + ' > ' + 'parts[4]' + ' > '+ "savings card registration thank you";
+        //if(s.regPageName) s.regPageName = s.regPageName.toLowerCase();
+        s.channel =  sc_site;
+        s.linkTrackVars= scLinkCustVars;
+        s.events="";
+        s.prop30="";
+        s.eVar30="D=c30";
+        s.prop34="";
+        s.eVar34="D=c34";
+        //s.channel = s.channel.toLowerCase();
+        //s.prop2 = s.channel + ' > ' + "global".toLowerCase();
+        //s.prop1 = sc_site.toLowerCase();
+        s.eVar45 ="D=c1";
+        s.t();
+}
+
+$('div.alignleft.mobile-only.saving').waitUntilExists(scModal);
+
+//Unsubscribe Error Page
+function scUnSub(){
+        s.regPageName =  sc_site + " > unsubscribe error";
+        if(s.regPageName) s.regPageName = s.regPageName.toLowerCase();
+        s.channel =  sc_site;
+        if(s.channel) s.channel = s.channel.toLowerCase();
+        if(s.prop2) s.prop2 = s.channel + ' > ' + "global".toLowerCase();
+        if(s.prop1) s.prop1 = sc_site.toLowerCase();
+        s.eVar45 ="D=c1";
+        s.t();
+}
+
+$('form.unsubscribe-form div.error-box:not(.ng-hide)').waitUntilExists(scUnSub);
+
+
+function savCardComplete(){
+        s.linkTrackVars="prop30,eVar30"+','+scLinkCustVars;
+        s.linkTrackEvents=s.events="event2";
+        s.prop30="registration";
+        s.eVar30="D=c30";
+        s.tl(this,'o',s.prop30 + ' > Form Complete');
+    };
+
+$('article#register.thank-you').waitUntilExists(savCardComplete);
+
+//savings card step 1
+function scRegDrop(){
+    $('form.registration-form span.jcf-select,form.registration-form label').one('click',function(){
+        s.linkTrackVars="prop30,eVar30"+','+scLinkCustVars;
+        s.linkTrackEvents=s.events="event39";
+        s.prop30="registration"
+        s.eVar30="D=c30"
+        s.tl(this,'o','form touched')
+        $('form.registration-form span.jcf-select,form.registration-form label').off('click')
+    });
+
+     $('select[name="day"], select[name="month"], select[name="year"]').on('change', function() {
+        s.linkTrackVars="prop30,eVar30,prop34,eVar34"+','+scLinkCustVars;
+        s.linkTrackEvents=s.events="event3";
+        s.prop30="registration"
+        s.eVar30="D=c30"
+        s.prop34="registration > " +$(this).attr("id");
+        s.eVar34="D=c34"
+        s.tl(this,'o','day')
+    });
+     $('label[for="yesPrescription"]').on('mousedown', function() {
+        s.linkTrackVars="prop30,eVar30,prop34,eVar34"+','+scLinkCustVars;
+        s.linkTrackEvents=s.events="event3";
+        s.prop30="registration"
+        s.eVar30="D=c30"
+        s.prop34="registration > prescription = yes"
+        s.eVar34="D=c34"
+        s.tl(this,'o','prescription yes')
+    });
+     $('label[for="noPrescription"]').on('mousedown', function() {
+        s.linkTrackVars="prop30,eVar30,prop34,eVar34"+','+scLinkCustVars;
+        s.linkTrackEvents=s.events="event3";
+        s.prop30="registration"
+        s.eVar30="D=c30"
+        s.prop34="registration > prescription = no"
+        s.eVar34="D=c34"
+        s.tl(this,'o','prescription no')
+    });
+     $('label[for="yesTaking"]').on('mousedown', function() {
+        s.linkTrackVars="prop30,eVar30,prop34,eVar34"+','+scLinkCustVars;
+        s.linkTrackEvents=s.events="event3";
+        s.prop30="registration"
+        s.eVar30="D=c30"
+        s.prop34="registration > taking = yes"
+        s.eVar34="D=c34"
+        s.tl(this,'o','taking yes')
+    });
+     $('label[for="noTaking"]').on('mousedown', function() {
+        s.linkTrackVars="prop30,eVar30,prop34,eVar34"+','+scLinkCustVars;
+        s.linkTrackEvents=s.events="event3";
+        s.prop30="registration"
+        s.eVar30="D=c30"
+        s.prop34="registration > taking = no"
+        s.eVar34="D=c34"
+        s.tl(this,'o','taking no')
+    });
+
+}
+
+$('select.month').waitUntilExists(scRegDrop);
+
+//Your Info fields
+function scYourInfo(){
+        $('input[name="firstName"], input[name="lastName"], input[name="address"], input[id="apt"], input[name="city"], input[name="state"], input[name="zip"], input[name="email"], input[name="emailConfirm"], input[id="phone"]').on('blur', function() {
+            s.linkTrackVars="prop30,eVar30,prop34,eVar34"+','+scLinkCustVars;
+            s.linkTrackEvents=s.events="event3";
+            s.prop30="registration"
+            s.eVar30="D=c30"
+            s.prop34="registration > " +$(this).attr("id");
+            s.eVar34="D=c34"
+            s.tl(this,'o','state')
+        });
+        $('select[name="state"], select[name="phoneType"], select[name="interestedIn"], select[name="role"]').on('change', function() {
+            s.linkTrackVars="prop30,eVar30,prop34,eVar34"+','+scLinkCustVars;
+            s.linkTrackEvents=s.events="event3";
+            s.prop30="registration"
+            s.eVar30="D=c30"
+            s.prop34="registration > " +$(this).attr("id");
+            s.eVar34="D=c34"
+            s.tl(this,'o','state')
+        });
+
+          $('input[id="check-mail"]').on('change', function() {
+            s.linkTrackVars="prop30,eVar30,prop34,eVar34"+','+scLinkCustVars;
+            s.linkTrackEvents=s.events="event3";
+            s.prop30="registration"
+            s.eVar30="D=c30"
+            s.prop34="registration > check-mail"
+            s.eVar34="D=c34"
+            s.tl(this,'o','check-mail')
+        });
+           $('input[id="yes01"]').on('change', function() {
+            s.linkTrackVars="prop30,eVar30,prop34,eVar34"+','+scLinkCustVars;
+            s.prop30="registration"
+            s.eVar30="D=c30"
+            s.prop34="registration > agree"
+            s.eVar34="D=c34"
+            s.tl(this,'o','agree')
+        });
+           $('input[id="yes02"]').on('change', function() {
+            s.linkTrackVars="prop30,eVar30,prop34,eVar34"+','+scLinkCustVars;
+            s.prop30="registration"
+            s.eVar30="D=c30"
+            s.prop34="registration > receiveInformation"
+            s.eVar34="D=c34"
+            s.tl(this,'o','receiveInformation')
+        });
+}
+
+$('form.registration-form.ng-invalid.ng-invalid-required').waitUntilExists(scYourInfo);
+
+function checkEllNow(){
+     $('#saving-card a.btn-light-green').on('click', function() {
+        s.linkTrackVars="prop30,eVar30"+','+scLinkCustVars;
+        s.linkTrackEvents=s.events="event1";
+        s.prop30="registration";
+        s.eVar30="D=c30";
+        s.tl(this,'o',s.prop30 + ' > Form Start');
+        
+        });
+}     
+
+$("span i:contains('The REXULTI')").waitUntilExists(checkEllNow);
+
+function savCardStart(){
+     $('input[value="Pre-register Now"]').on('click', function() {
+        s.linkTrackVars="prop30,eVar30"+','+scLinkCustVars;
+        s.linkTrackEvents=s.events="event1";
+        s.prop30="registration";
+        s.eVar30="D=c30";
+        s.tl(this,'o',s.prop30 + ' > Form Start');
+        
+        });
+}     
+
+$("span:contains('Pre-register Now for ')").waitUntilExists(savCardStart);
+
+
+s.account=s_account;
