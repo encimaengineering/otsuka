@@ -1,4 +1,4 @@
-/*! SiteCatalyst code version: H.27.22
+/*! SiteCatalyst code version: H.27.22 sample
 Copyright 1996-2014 Adobe, Inc. All Rights Reserved
 More info available at http://www.omniture.com
 Last updated 09/30/2014 by Carl Wall
